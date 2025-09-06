@@ -48,4 +48,4 @@ This automatically generates:
 - [x] Automatic style scoping
 - [x] Zero runtime overhead
 - [x] Works with any SCSS file
-- [] Need to test with CSS file
+- [ ] Need to test with CSS file
