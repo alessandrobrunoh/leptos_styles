@@ -2,66 +2,27 @@ use proc_macro::TokenStream;
 use quote::quote;
 use syn::{parse_macro_input, ItemFn, LitStr};
 
-/// Applies CSS styles from a specified file to a Leptos component.
+/// Applies scoped CSS styles from a file to a Leptos component.
 ///
-/// This attribute macro transforms a Leptos component function by:
-/// 1. Reading the content of a CSS file specified by `path`.
-/// 2. Generating a unique ID for the component based on the CSS filename (stem).
-/// 3. Wrapping the original component's view output within a `<div>` element
-///    whose `id` attribute is set to the generated unique ID.
-/// 4. Injecting a `<style>` tag into the component's view, containing the CSS
-///    from the file, automatically scoped to the generated unique ID using a
-///    CSS ID selector.
-///
-/// The CSS in the file will be applied to the wrapped `<div>` and its children
-/// using the ID selector. This mechanism helps in scoping styles to a specific
-/// component instance.
+/// Reads CSS from the specified file path, generates a unique component ID,
+/// and wraps the component's view in a div with scoped styles.
 ///
 /// # Arguments
 ///
-/// * `path`: A string literal representing the path to the CSS file.
-///           This path is resolved relative to the `CARGO_MANIFEST_DIR`
-///           environment variable, which typically points to the root of your crate.
+/// * `path` - Path to the CSS file relative to `CARGO_MANIFEST_DIR`
 ///
 /// # Example
 ///
-/// Assuming you have a CSS file at `src/my_component.css`:
-/// ```css
-/// p {
-///     color: blue;
-///     font-size: 1.2em;
-/// }
-/// ```
-///
-/// You can apply these styles to a Leptos component function like this:
-///
 /// ```ignore
 /// use leptos::*;
-/// // Assuming your proc-macro crate is named `my_macros`
-/// use my_macros::styles;
+/// use leptos_styles::styles;
 ///
 /// #[component]
 /// #[styles("src/my_component.css")]
 /// pub fn MyComponent() -> impl IntoView {
-///     view! {
-///         <p>"Hello from MyComponent!"</p>
-///     }
+///     view! { <p>"Styled content"</p> }
 /// }
 /// ```
-///
-/// This would conceptually expand to a view structure similar to:
-/// ```html
-/// <style>
-///     #my_component1234 { /* The content of src/my_component.css is included here */
-///         p {
-///             color: blue;
-///             font-size: 1.2em;
-///         }
-///     }
-/// </style>
-/// <div id="my_component1234">
-///     <p>Hello from MyComponent!</p>
-/// </div>
 #[proc_macro_attribute]
 pub fn styles(attr: TokenStream, item: TokenStream) -> TokenStream {
     let path_lit = parse_macro_input!(attr as LitStr);
