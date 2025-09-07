@@ -1,2 +1,4 @@
 /target
 Cargo.lock
+# Build artifacts from validation and testing
+*.tmp
